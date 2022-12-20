@@ -35,7 +35,6 @@ const create = async (req: Request, res: Response) => {
             email: req.body.email,
             password: req.body.password
         }
-
         const newUser = await store.create(user)
         var token = jwt.sign({ user: newUser }, process.env.TOKEN_SECRET as Secret)
         res.json(token)
@@ -51,7 +50,7 @@ const authenticate = async (req: Request, res: Response) => {
             email: req.body.email,
             password: req.body.password
         }
-
+        console.log(user)
         const u = await store.authenticate(user.email, user.password)
         var token = jwt.sign({ user: u }, process.env.TOKEN_SECRET as Secret)
         res.json(token)
