@@ -65,7 +65,7 @@ const addProduct = async (req: Request, res: Response) => {
 
     try {
         const orderId: string = req.params.id
-        const productId: string = req.body.productId
+        const productId: string = req.body.product_id
         const quantity: number = parseInt(req.body.quantity)
 
         const addedProduct = await store.addProduct(quantity, orderId, productId)

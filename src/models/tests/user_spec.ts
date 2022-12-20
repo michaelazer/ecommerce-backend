@@ -16,7 +16,7 @@ describe("User Model", () => {
   });
 
   it('should have a delete method', () => {
-    expect(store.index).toBeDefined();
+    expect(store.delete).toBeDefined();
   });
 
   it('create method should add a user', async () => {
