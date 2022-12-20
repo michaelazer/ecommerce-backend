@@ -5,13 +5,26 @@ import jwt, { Secret } from 'jsonwebtoken'
 const store = new OrderStore()
 
 const index = async (req: Request, res: Response) => {
-    const orders = await store.index()
-    res.json(orders)
+    try{
+        const orders = await store.index()
+        res.json(orders)
+    } catch (err) {
+        res.status(401)
+        res.json(err)
+        return
+    }
+    
 }
 
 const show = async (req: Request, res: Response) => {
-    const order = await store.show(req.body.id)
-    res.json(order)
+    try {
+        const order = await store.show(req.body.id)
+        res.json(order)
+    } catch (err) {
+        res.status(401)
+        res.json(err)
+        return
+    }
 }
 
 const create = async (req: Request, res: Response) => {

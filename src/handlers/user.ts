@@ -68,8 +68,13 @@ const authenticate = async (req: Request, res: Response) => {
 }
 
 const destroy = async (req: Request, res: Response) => {
-    const deleted = await store.delete(req.body.id)
-    res.json(deleted)
+    try {
+        const deleted = await store.delete(req.body.id)
+        res.json(deleted)
+    } catch (err) {
+        res.status(400)
+        res.json(err)
+    }
 }
 
 const userRoutes = (app: express.Application) => {

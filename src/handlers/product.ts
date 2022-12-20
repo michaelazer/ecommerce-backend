@@ -4,13 +4,23 @@ import { Product, ProductStore } from '../models/product'
 const store = new ProductStore()
 
 const index = async (req: Request, res: Response) => {
-  const products = await store.index()
-  res.json(products)
+    try {
+        const products = await store.index()
+        res.json(products)
+    } catch (err) {
+        res.status(400)
+        res.json(err)
+    }
 }
 
 const show = async (req: Request, res: Response) => {
-   const product = await store.show(req.body.id)
-   res.json(product)
+    try {
+        const product = await store.show(req.body.id)
+        res.json(product)
+    } catch (err) {
+        res.status(400)
+        res.json(err)
+    }
 }
 
 const create = async (req: Request, res: Response) => {
@@ -22,22 +32,27 @@ const create = async (req: Request, res: Response) => {
 
         const newProduct = await store.create(product)
         res.json(newProduct)
-    } catch(err) {
+    } catch (err) {
         res.status(400)
         res.json(err)
     }
 }
 
 const destroy = async (req: Request, res: Response) => {
-    const deleted = await store.delete(req.body.id)
-    res.json(deleted)
+    try {
+        const deleted = await store.delete(req.body.id)
+        res.json(deleted)
+    } catch (err) {
+        res.status(400)
+        res.json(err)
+    }
 }
 
 const productRoutes = (app: express.Application) => {
-  app.get('/products', index)
-  app.get('/products/:id', show)
-  app.post('/products', create)
-  app.delete('/products', destroy)
+    app.get('/products', index)
+    app.get('/products/:id', show)
+    app.post('/products', create)
+    app.delete('/products', destroy)
 }
 
 export default productRoutes
