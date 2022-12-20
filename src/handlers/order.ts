@@ -4,7 +4,7 @@ import jwt, { Secret } from 'jsonwebtoken'
 
 const store = new OrderStore()
 
-const index = async (_req: Request, res: Response) => {
+const index = async (req: Request, res: Response) => {
     const orders = await store.index()
     res.json(orders)
 }
@@ -39,9 +39,9 @@ const create = async (req: Request, res: Response) => {
     }
 }
 
-const addProduct = async (_req: Request, res: Response) => {
+const addProduct = async (req: Request, res: Response) => {
     try {
-        const authorizationHeader = _req.headers.authorization as string
+        const authorizationHeader = req.headers.authorization as string
         const token = authorizationHeader.split(' ')[1]
         jwt.verify(token, process.env.TOKEN_SECRET as Secret)
     } catch (err) {
@@ -51,9 +51,9 @@ const addProduct = async (_req: Request, res: Response) => {
     }
 
     try {
-        const orderId: string = _req.params.id
-        const productId: string = _req.body.productId
-        const quantity: number = parseInt(_req.body.quantity)
+        const orderId: string = req.params.id
+        const productId: string = req.body.productId
+        const quantity: number = parseInt(req.body.quantity)
 
         const addedProduct = await store.addProduct(quantity, orderId, productId)
         res.json(addedProduct)

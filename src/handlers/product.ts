@@ -3,7 +3,7 @@ import { Product, ProductStore } from '../models/product'
 
 const store = new ProductStore()
 
-const index = async (_req: Request, res: Response) => {
+const index = async (req: Request, res: Response) => {
   const products = await store.index()
   res.json(products)
 }
