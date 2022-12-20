@@ -1,36 +1,30 @@
 import express, { Request, Response } from 'express'
 import { User, UserStore } from '../models/user'
 import jwt, { Secret } from 'jsonwebtoken'
+import auth from './auth'
 
 const store = new UserStore()
 
 const index = async (req: Request, res: Response) => {
     try {
-        const authorizationHeader = req.headers.authorization as string
-        const token = authorizationHeader.split(' ')[1]
-        jwt.verify(token, process.env.TOKEN_SECRET as Secret)
+        const users = await store.index()
+        res.json(users)
     } catch (err) {
         res.status(401)
-        res.json('Access denied, invalid token')
+        res.json(err)
         return
     }
-
-    const users = await store.index()
-    res.json(users)
 }
 
 const show = async (req: Request, res: Response) => {
     try {
-        const authorizationHeader = req.headers.authorization as string
-        const token = authorizationHeader.split(' ')[1]
-        jwt.verify(token, process.env.TOKEN_SECRET as Secret)
+        const user = await store.show(req.body.id)
+        res.json(user)
     } catch (err) {
         res.status(401)
-        res.json('Access denied, invalid token')
+        res.json(err)
         return
     }
-    const user = await store.show(req.body.id)
-    res.json(user)
 }
 
 const create = async (req: Request, res: Response) => {
@@ -78,11 +72,11 @@ const destroy = async (req: Request, res: Response) => {
 }
 
 const userRoutes = (app: express.Application) => {
-    app.get('/users', index)
-    app.get('/users/:id', show)
+    app.get('/users', auth, index)
+    app.get('/users/:id', auth, show)
     app.post('/users', create)
     app.post('/user', authenticate)
-    app.delete('/users', destroy)
+    app.delete('/users', auth, destroy)
 }
 
 export default userRoutes

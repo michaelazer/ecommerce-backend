@@ -1,5 +1,6 @@
 import express, { Request, Response } from 'express'
 import { Product, ProductStore } from '../models/product'
+import auth from './auth'
 
 const store = new ProductStore()
 
@@ -51,8 +52,8 @@ const destroy = async (req: Request, res: Response) => {
 const productRoutes = (app: express.Application) => {
     app.get('/products', index)
     app.get('/products/:id', show)
-    app.post('/products', create)
-    app.delete('/products', destroy)
+    app.post('/products', auth, create)
+    app.delete('/products', auth, destroy)
 }
 
 export default productRoutes

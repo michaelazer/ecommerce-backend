@@ -1,6 +1,6 @@
 import express, { Request, Response } from 'express'
 import { Order, OrderStore } from '../models/order'
-import jwt, { Secret } from 'jsonwebtoken'
+import auth from './auth'
 
 const store = new OrderStore()
 
@@ -29,21 +29,10 @@ const show = async (req: Request, res: Response) => {
 
 const create = async (req: Request, res: Response) => {
     try {
-        const authorizationHeader = req.headers.authorization as string
-        const token = authorizationHeader.split(' ')[1]
-        jwt.verify(token, process.env.TOKEN_SECRET as Secret)
-    } catch (err) {
-        res.status(401)
-        res.json('Access denied, invalid token')
-        return
-    }
-
-    try {
         const order: Order = {
             user_id: req.body.user_id,
             status: req.body.status
         }
-
         const newOrder = await store.create(order)
         res.json(newOrder)
     } catch (err) {
@@ -53,16 +42,6 @@ const create = async (req: Request, res: Response) => {
 }
 
 const addProduct = async (req: Request, res: Response) => {
-    try {
-        const authorizationHeader = req.headers.authorization as string
-        const token = authorizationHeader.split(' ')[1]
-        jwt.verify(token, process.env.TOKEN_SECRET as Secret)
-    } catch (err) {
-        res.status(401)
-        res.json('Access denied, invalid token')
-        return
-    }
-
     try {
         const orderId: string = req.params.id
         const productId: string = req.body.product_id
@@ -78,15 +57,6 @@ const addProduct = async (req: Request, res: Response) => {
 
 const destroy = async (req: Request, res: Response) => {
     try {
-        const authorizationHeader = req.headers.authorization as string
-        const token = authorizationHeader.split(' ')[1]
-        jwt.verify(token, process.env.TOKEN_SECRET as Secret)
-    } catch (err) {
-        res.status(401)
-        res.json('Access denied, invalid token')
-        return
-    }
-    try {
         const deleted = await store.delete(req.body.id)
         res.json(deleted)
     } catch (err) {
@@ -96,11 +66,11 @@ const destroy = async (req: Request, res: Response) => {
 }
 
 const orderRoutes = (app: express.Application) => {
-    app.get('/orders', index)
-    app.get('/orders/:id', show)
-    app.post('/orders', create)
-    app.post('/orders/:id/products', addProduct)
-    app.delete('/orders', destroy)
+    app.get('/orders', auth, index)
+    app.get('/orders/:id', auth, show)
+    app.post('/orders', auth, create)
+    app.post('/orders/:id/products', auth, addProduct)
+    app.delete('/orders', auth, destroy)
 }
 
 export default orderRoutes
