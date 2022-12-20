@@ -9,9 +9,7 @@ const {
     POSTGRES_TEST_DB,
     POSTGRES_USER,
     POSTGRES_PASSWORD,
-    ENV,
-    BCRYPT_PASSWORD,
-    SALT_ROUNDS
+    ENV
 } = process.env
 
 let client: Pool

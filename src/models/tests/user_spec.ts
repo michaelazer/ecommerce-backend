@@ -22,36 +22,32 @@ describe("User Model", () => {
   it('create method should add a user', async () => {
     const result: User = await store.create({
       id: 1,
+      email: 'michael.azer@test.com',
       first_name: 'Michael',
       last_name: 'Azer',
       password: 'P@$$w0rd'
     });
-    expect(result).toEqual({
+    expect(result).toEqual(jasmine.objectContaining({
       id: 1,
+      email: 'michael.azer@test.com',
       first_name: 'Michael',
-      last_name: 'Azer',
-      password: 'P@$$w0rd'
-    });
+      last_name: 'Azer'
+    }));
   });
 
   it('index method should return a list of users', async () => {
     const result: User[] = await store.index();
-    expect(result).toEqual([{
-      id: 1,
-      first_name: 'Michael',
-      last_name: 'Azer',
-      password: 'P@$$w0rd'
-    }]);
+    expect(result.length).toEqual(1);
   });
 
   it('show method should return the correct user', async () => {
     const result: User = await store.show("1");
-    expect(result).toEqual({
+    expect(result).toEqual(jasmine.objectContaining({
       id: 1,
+      email: 'michael.azer@test.com',
       first_name: 'Michael',
-      last_name: 'Azer',
-      password: 'P@$$w0rd'
-    });
+      last_name: 'Azer'
+    }));
   });
 
   it('delete method should remove the user', async () => {
