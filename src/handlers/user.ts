@@ -8,6 +8,7 @@ const store = new UserStore()
 const index = async (req: Request, res: Response) => {
     try {
         const users = await store.index()
+        res.status(200)
         res.json(users)
     } catch (err) {
         res.status(401)
@@ -19,6 +20,7 @@ const index = async (req: Request, res: Response) => {
 const show = async (req: Request, res: Response) => {
     try {
         const user = await store.show(req.body.id)
+        res.status(200)
         res.json(user)
     } catch (err) {
         res.status(401)
@@ -37,6 +39,7 @@ const create = async (req: Request, res: Response) => {
         }
         const newUser = await store.create(user)
         var token = jwt.sign({ user: newUser }, process.env.TOKEN_SECRET as Secret)
+        res.status(200)
         res.json(token)
     } catch (err) {
         res.status(400)
@@ -50,9 +53,10 @@ const authenticate = async (req: Request, res: Response) => {
             email: req.body.email,
             password: req.body.password
         }
-        console.log(user)
+
         const u = await store.authenticate(user.email, user.password)
         var token = jwt.sign({ user: u }, process.env.TOKEN_SECRET as Secret)
+        res.status(200)
         res.json(token)
     } catch (err) {
         res.status(400)
@@ -63,6 +67,7 @@ const authenticate = async (req: Request, res: Response) => {
 const destroy = async (req: Request, res: Response) => {
     try {
         const deleted = await store.delete(req.body.id)
+        res.status(200)
         res.json(deleted)
     } catch (err) {
         res.status(400)

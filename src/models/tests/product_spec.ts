@@ -21,15 +21,13 @@ describe("Product Model", () => {
 
   it('create method should add a product', async () => {
     const result: Product = await store.create({
-      id: 1,
       name: 'test_product',
       price: '100'
     });
-    expect(result).toEqual({
-      id: 1,
+    expect(result).toEqual(jasmine.objectContaining({
       name: 'test_product',
       price: '100'
-    });
+    }));
   });
 
   it('index method should return a list of products', async () => {
@@ -38,17 +36,17 @@ describe("Product Model", () => {
   });
 
   it('show method should return the correct product', async () => {
-    const result: Product = await store.show("1");
+    const result: Product = await store.show("2");
     expect(result).toEqual({
-      id: 1,
+      id: 2,
       name: 'test_product',
       price: '100'
     });
   });
 
   it('delete method should remove the product', async () => {
-    store.delete("1");
-    const result = await store.index()
+    const _deleted = await store.delete("2");
+    const result = await store.index();
 
     expect(result).toEqual([]);
   });
