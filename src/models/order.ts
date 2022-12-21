@@ -6,6 +6,13 @@ export type Order = {
     status: string;
 }
 
+export type Order_Products = {
+    id?: number;
+    order_id: string;
+    product_id: string;
+    quantity: number;
+}
+
 export class OrderStore {
     async index(): Promise<Order[]> {
         try {
@@ -58,7 +65,7 @@ export class OrderStore {
         }
     }
 
-    async addProduct(quantity: number, order_id: string, product_id: string): Promise<Order> {
+    async addProduct(quantity: number, order_id: string, product_id: string): Promise<Order_Products> {
         try {
             const ordersql = 'SELECT * FROM orders WHERE id=($1)'
             const conn = await client.connect()
@@ -84,11 +91,11 @@ export class OrderStore {
             const result = await conn
                 .query(sql, [quantity, order_id, product_id])
 
-            const order = result.rows[0]
+            const order_products = result.rows[0]
 
             conn.release()
 
-            return order
+            return order_products
         } catch (err) {
             throw new Error(`Could not add product ${product_id} to order ${order_id}: ${err}`)
         }

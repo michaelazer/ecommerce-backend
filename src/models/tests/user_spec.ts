@@ -1,7 +1,8 @@
 import { User, UserStore } from '../user';
-import client from '../../database';
 
 const store = new UserStore()
+
+let created_user: number = 0
 
 describe("User Model", () => {
   it('should have an index method', () => {
@@ -32,6 +33,7 @@ describe("User Model", () => {
       first_name: 'Michael',
       last_name: 'Azer'
     }));
+    created_user = result.id as number
   });
 
   it('index method should return a list of users', async () => {
@@ -40,7 +42,7 @@ describe("User Model", () => {
   });
 
   it('show method should return the correct user', async () => {
-    const result: User = await store.show("2");
+    const result: User = await store.show(created_user.toString());
     expect(result).toEqual(jasmine.objectContaining({
       email: 'michael.azer@test.com',
       first_name: 'Michael',
@@ -49,7 +51,7 @@ describe("User Model", () => {
   });
 
   it('delete method should remove the user', async () => {
-    const _deleted = await store.delete("2");
+    const _deleted = await store.delete(created_user.toString());
     const result = await store.index()
 
     expect(result).toEqual([]);

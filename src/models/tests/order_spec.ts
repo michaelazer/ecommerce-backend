@@ -1,6 +1,8 @@
-import { Order, OrderStore } from '../order';
+import { Order, OrderStore, Order_Products } from '../order';
 
 const store = new OrderStore()
+
+let created_order: number = 0
 
 describe("Order Model", () => {
   it('should have an index method', () => {
@@ -28,11 +30,12 @@ describe("Order Model", () => {
       user_id: '1',
       status: 'open'
     }));
+    created_order = result.id as number
   });
 
   it('addProduct method should add products to order', async () => {
-    const result: Order = await store.addProduct(1, "2", "1")
-    expect(result.id).toEqual(2);
+    const result: Order_Products = await store.addProduct(1, created_order.toString(), "1")
+    expect(result.order_id).toEqual(created_order.toString());
   })
 
   it('index method should return a list of orders', async () => {
@@ -41,16 +44,15 @@ describe("Order Model", () => {
   });
 
   it('show method should return the correct order', async () => {
-    const result: Order = await store.show("2");
-    expect(result).toEqual({
-      id: 2,
+    const result: Order = await store.show(created_order.toString());
+    expect(result).toEqual(jasmine.objectContaining({
       user_id: '1',
       status: 'open'
-    });
+    }));
   });
 
   it('delete method should remove the order', async () => {
-    const _deleted = await store.delete("2");
+    const _deleted = await store.delete(created_order.toString());
     const result = await store.index()
 
     expect(result).toEqual([]);
